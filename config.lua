@@ -55,7 +55,6 @@ function TEMPLATE()
             ["LMF (public)"] = "#bae1ff",
             ["Office 365 Sync"] = "#ffffba",
         }
-        ),
-        end_()
+        )
     }
 end
