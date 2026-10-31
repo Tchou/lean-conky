@@ -1,4 +1,6 @@
 require('cairo_text_helper')
+require('utils')
+
 local SCALE_FACTOR = 1
 
 local function text_width(font, size, text)
@@ -103,26 +105,24 @@ function bar(column, name)
 end
 
 function gen_label(column,
-                   icon_color, icon_font, icon_size, icon,
+                   icon_color, icon,
                    label,
                    color, font, size, text)
     local cols = col_infos(column)
     local x = cols["x"]
     local col_w = cols["w"]
-    local icon_w = text_width(icon_font, icon_size, icon)
-    local x_w = text_width(font, size, "x") + 0.5
-    x_w = math.floor(x_w * (math.floor(icon_w / x_w) + 1.5))
+    local x_w = math.floor(text_width(font, size, "x") * 2.5)
     text = conky_parse(text)
-    label = label
     local x_text = col_w - text_width(font, size, text)
-    local res = goto_(x) .. font_(icon_font, icon_size) .. color_(icon_color) .. icon ..
-        goto_(x + x_w) .. font_(font, size) .. label ..
+    local res =
+        goto_(x) .. font_(font, size) .. color_(icon_color) .. icon ..
+        goto_(x + x_w) .. font_(font, size) .. color_(icon_color) .. label ..
         goto_(x + x_text) .. font_(font, size) .. color_(color) .. text
     return res
 end
 
 function label(column, icon, label, text)
-    return gen_label(column, RES.icon_color, RES.icon_font, RES.icon_size,
+    return gen_label(column, RES.icon_color,
         icon, label, RES.color, RES.font, RES.size, text)
 end
 
@@ -139,12 +139,11 @@ function gen_line(column, color, dash, height)
         height = 2
     end
     return goto_(cols["x"]) ..
+        font_(RES.font, RES.size) ..
         color_(color) .. hr .. tostring(height) .. " " ..
         tostring(cols["w"]) .. "}"
 end
 
 function hr(d)
-    return "\n" ..
-        gen_line("1:1", RES.icon_color, d, RES.hr_width) .. "\n"
+    return gen_line("1:1", RES.icon_color, d, RES.hr_width) .. "\n"
 end
-

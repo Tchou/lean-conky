@@ -7,8 +7,8 @@ function mk_date(day_t, time_t)
     res["year"] = tonumber(day_t[1])
     res["month"] = tonumber(day_t[2])
     res["day"] = tonumber(day_t[3])
-    res["hour"] = tonumber(time_t[1] or 0)
-    res["min"] = tonumber(time_t[2] or 0)
+    res["hour"] = tonumber(time_t[1]) or 0
+    res["min"] = tonumber(time_t[2]) or 0
     res["sec"] = 0
     return res
 end
@@ -62,9 +62,9 @@ function gcalcli(delay, calendars)
         if tline[1] ~= tline[3] then
             multi_day = " …"
         end
-        local ongoing = "  "
+        local ongoing = "    "
         if ctime >= ts_start and ctime <= ts_end then
-            ongoing = "● "
+            ongoing = "󰜴   "
         end
         local l = gen_text("l", "1:1", color, RES.font, RES.size, ongoing .. time_str .. multi_day .. "   " .. desc)
         table.insert(output, l)

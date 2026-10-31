@@ -3,9 +3,9 @@ function format_gib(n)
     local x = tonumber(n)
     local res = x / base
     if res < 10 then
-        return string.format("%.2f", res)
+        return string.format("%.2f", res) .. "GiB"
     else
-        return tostring(math.floor(res))
+        return tostring(math.floor(res)) .. "GiB"
     end
 end
 

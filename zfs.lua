@@ -60,7 +60,7 @@ end
 
 function zfs_format(mp)
     local infos = zfs_info(mp)
-    return infos["used_gb"] .. "/" .. infos["total_gb"] .. "GiB on " .. infos["pool_name"]
+    return infos["used_gb"] .. "/" .. infos["total_gb"]
     .. " -" .. format_perc(infos["ratio"]) .. "%"
 end
 

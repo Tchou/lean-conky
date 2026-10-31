@@ -1,12 +1,9 @@
 require("layout")
 
 function uname(icon)
-    local res = gen_label("1:1",
-        RES.icon_color, RES.brand_font, RES.brand_size, icon,
+    local res = label("1:1", icon,
         "${no_update $sysname $nodename $kernel $machine}",
-        RES.color, RES.font, RES.size,
-        ""
-    )
+        "")
     return res
 end
 
@@ -45,12 +42,13 @@ function mem_usage(lab, prefix, icon)
 end
 
 function ram_usage()
-    return mem_usage("Ram", "mem", "")
+    return mem_usage("Ram", "mem", "")
 end
 
 function swap_usage()
     return mem_usage("Swap", "swap", "")
 end
-function cpu_usage ()
+
+function cpu_usage()
     return gen_usage("CPU", "cpu", "", "$cpu%")
 end

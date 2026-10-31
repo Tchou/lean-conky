@@ -6,6 +6,7 @@ end
 require('res')
 require('layout')
 require('config')
+require('utils')
 
 function conky_setup()
     local cfg = CONFIG() or {}
@@ -18,5 +19,13 @@ end
 function conky_content()
     local t = TEMPLATE() or {}
     local res = table.concat(t, "")
-    return res .. "${voffset 0}" -- ensures the window grows ?
+    t = split(res, "\n")
+    local vo = "${voffset " .. tostring(RES.line_offset) .. "}"
+
+    for i = 1, #t do
+        local line = t[i]
+        t[i] = vo .. line
+    end
+    res = table.concat(t, "\n")
+    return res
 end
