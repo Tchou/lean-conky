@@ -24,6 +24,7 @@ conky.config = {
     draw_shades = false,
     minimum_width = 550,
     maximum_width = 550,
+    minimum_height = 550,
     draw_borders = false,
     border_outer_margin = 0,
     border_inner_margin = 10,

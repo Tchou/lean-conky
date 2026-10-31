@@ -1,3 +1,5 @@
+.vscode
+
 # Compiled Lua sources
 luac.out
 
@@ -26,6 +28,7 @@ luac.out
 *.exp
 
 # Shared objects (inc. Windows DLLs)
+
 *.dll
 *.so
 *.so.*

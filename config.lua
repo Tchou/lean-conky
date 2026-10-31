@@ -1,56 +1,61 @@
-require('layout')
-require('system')
-require('zfs')
-require('network')
-require('gcalcli')
+local layout = require('lc.layout')
+local row = layout.row
+local hr = layout.hr
+local M = {}
 
-function CONFIG()
-    return {
-        font = "UbuntuMonoNerdFont:style=Regular",
-        size = 20,
-        color = "#ffffff",
-        icon_color = "#EB6536",
-        -- misc
-        scale_factor = 2, -- if running under Xwayland + Gnome Wayland
-        column_sep = 20,
-        hr_width = 1,
-        bar_height = 8,
-        line_offset = 0
-    }
-end
+-- Import what is needed for the main template
 
-function TEMPLATE()
+local sys = require('lc.system')
+local zfs = require('lc.zfs')
+local net = require('lc.network')
+local gcalcli = require('lc.gcalcli')
+
+M.CONFIG = {
+    font = "UbuntuMonoNerdFont:style=Regular",
+    size = 18,
+    color = "#ffffff",
+    icon_color = "#EB6536",
+    -- misc
+    scale_factor = 2, -- if running under Xwayland + Gnome Wayland
+    column_sep = 20,
+    hr_width = 1,
+    bar_height = 8,
+    line_offset = 0
+}
+
+
+function M.TEMPLATE()
     return {
-        uname("󰕈"), "\n",
+        sys.uname(),
         hr(2),
-        uptime(), "\n",
-        cpufreq(8),
-        ram_usage(), "\n",
-        swap_usage(), "\n",
-        cpu_usage(), "\n",
-        label("1/2:1", "", "Processes:", "$processes"),
-        label("1/2:2", "", "Running:", "$running_processes"), "\n",
+        sys.uptime(),
+        sys.cpufreq(8),
+        sys.ram_usage(),
+        sys.swap_usage(),
+        sys.cpu_usage(),
+        sys.ps(),
         hr(2),
-        zfs_usage("", "~", "/home/kim"), "\n",
-        zfs_usage("", "Vault", "/home/kim/Private"), "\n",
-        zfs_usage("", "/", "/"), "\n",
-        zfs_usage("", "Total", "rpool"), "\n",
-        zfs_usage("󱐋", "Boot", "/boot"), "\n",
-        interfaces({ "eth0", "wlp2s0" },hr(2)), "\n",
+        zfs.usage("\u{f02dc}", "~", "/home/kim"),
+        zfs.usage("\u{f023}", "Vault", "/home/kim/Private"),
+        zfs.usage("\u{f0a0}", "/", "/"),
+        zfs.usage("\u{f200}", "Total", "rpool"),
+        zfs.usage("\u{f140b}", "Boot", "/boot"),
+        net.interfaces({ "eth0", "wlp2s0" }, hr(2)),
         hr(2),
-        label("1/2:1", "", "Package ID 0:", "+${hwmon coretemp temp 1}°C"), "\n",
-        label("1/2:1", "", "Core 0:", "+${hwmon coretemp temp 2}°C"),
-        label("1/2:2", "", "Core 1:", "+${hwmon coretemp temp 3}°C"), "\n",
-        label("1/2:1", "", "Core 2:", "+${hwmon coretemp temp 4}°C"),
-        label("1/2:2", "", "Core 3:", "+${hwmon coretemp temp 5}°C"), "\n",
-        label("1/2:1", "", "Fan 1:", "${hwmon dell_smm fan 1} RPM"),
-        label("1/2:2", "", "Fan 2:", "${hwmon dell_smm fan 2} RPM"), "\n",
+        sys.hwmon("1/2:1", "Package ID 0:", "temp", "coretemp", 1),
+        row(sys.hwmon("1/2:1", "Core 0:", "temp", "coretemp", 2),
+            sys.hwmon("1/2:2", "Core 1:", "temp", "coretemp", 3)),
+        row(sys.hwmon("1/2:1", "Core 2:", "temp", "coretemp", 4),
+            sys.hwmon("1/2:2", "Core 3:", "temp", "coretemp", 5)),
+        row(sys.hwmon("1/2:1", "Fan 1:", "fan", "dell_smm", 1),
+            sys.hwmon("1/2:2", "Fan 2:", "fan", "dell_smm", 2)),
         hr(2),
-        gcalcli(300, {
+        gcalcli.get(300, {
             ["kim@nguyen.vg"] = "#baffc9",
             ["LMF (public)"] = "#bae1ff",
             ["Office 365 Sync"] = "#ffffba",
-        }
-        )
+        })
     }
 end
+
+return M
