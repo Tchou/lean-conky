@@ -15,7 +15,6 @@ conky.config = {
     own_window = true,
     own_window_type = 'desktop',
     own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
-    own_window_color = '#cd170026',
     own_window_title = 'Conky@!DESKTOP: x=1360,y=50',
     alignment = 'top_right',
     gap_x = 30,
@@ -35,6 +34,7 @@ conky.config = {
     -- Lua scripts --
     lua_load = '/home/kim/.conky/setup.lua',
     lua_startup_hook = "setup",
+    lua_draw_hook_pre = "bg"
 }
 
 conky.text = [[${lua_parse content}]]

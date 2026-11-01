@@ -14,3 +14,7 @@ function conky_content()
     local t = cfg.TEMPLATE() or {}
     return layout.render(t)
 end
+
+function conky_bg ()
+    layout.draw_bg ()
+end

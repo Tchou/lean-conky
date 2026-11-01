@@ -1,4 +1,5 @@
 require('cairo_text_helper')
+require('cairo')
 local M = {}
 
 ---Configuration all fields are optional. The font should be able to display
@@ -8,6 +9,7 @@ local M = {}
 ---@field size? integer font size in logical pixels (scaled by scale_factor)
 ---@field color? string text color, "#rrggbb"
 ---@field icon_color? string icon color, "#rrggbb"
+---@field window_color? string background color of the window "#rrggbb" or "#aarrggbb"
 ---@field scale_factor? number display scale (2 under Xwayland on a 2x GNOME desktop)
 ---@field column_sep? integer horizontal gap between columns, in logical pixels
 ---@field hr_width? integer thickness of horizontal rules, in pixels
@@ -20,6 +22,7 @@ local DEFAULTS = {
     size = 16,
     color = "#ffffff",
     icon_color = "#ff0000",
+    window_color = "#000000",
     scale_factor = 1,
     column_sep = 16,
     hr_width = 2,
@@ -58,7 +61,25 @@ local function text_width(text)
     local w, _ = cairo_text_hp_text_size(text, RES.font, RES.size)
     return math.floor(w / RES.scale_factor)
 end
-
+local COLOR_CACHE = {}
+---Parse "#RRGGBB" or "#AARRGGBB" into { r, g, b, a }, each in 0..1.
+---Hex digits may be upper or lower case. Without an alpha component, a is 1.
+---@param color string
+---@return number[] rgba
+local function parse_color(color)
+    local s = tostring(color)
+    local c = COLOR_CACHE[s]
+    if c ~= nil then return c end
+    local full = #s == 7 and "#FF" .. s:sub(2) or s
+    local a, r, g, b = full:match("^#(%x%x)(%x%x)(%x%x)(%x%x)$")
+    if not a then
+        error(("invalid color %s: expected #RRGGBB or #AARRGGBB"):format(s), 2)
+    end
+    local function n(h) return tonumber(h, 16) / 255 end
+    c = { n(r), n(g), n(b), n(a) }
+    COLOR_CACHE[s] = c
+    return c
+end
 ---@class ColumnInfo
 ---@field x number start horizontal position of the column
 ---@field w number width of the column in pixels
@@ -276,7 +297,7 @@ end
 ---Remove its argument from the output
 ---@param ... string
 ---@return Lines
-function M.ignore (...)
+function M.ignore(...)
     return {}
 end
 
@@ -290,6 +311,17 @@ function M.render(t)
         nl = "${voffset " .. tostring(RES.line_offset) .. "}\n"
     end
     return prefix .. table.concat(flatten(t), nl)
+end
+
+---Redraws the window background
+function M.draw_bg()
+    local surface = conky_surface()
+    if not surface then return end
+    local cr = cairo_create(surface)
+    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE)
+    cairo_set_source_rgba(cr, table.unpack(parse_color(RES.window_color)))
+    cairo_paint(cr)
+    cairo_destroy(cr)
 end
 
 return M
