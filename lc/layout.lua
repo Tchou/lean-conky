@@ -273,6 +273,13 @@ function M.row(...)
     return table.concat({ ... })
 end
 
+---Remove its argument from the output
+---@param ... string
+---@return Lines
+function M.ignore (...)
+    return {}
+end
+
 ---Renders the layout as a single string
 ---@param t Lines
 ---@return string

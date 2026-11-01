@@ -66,4 +66,41 @@ function M.run_cached(delay, cmdline, sep)
     return res
 end
 
+---Shallow copy of the given table
+---@param t table
+---@return table
+function M.copy_table(t)
+    local r = {}
+    for k, v in pairs(t) do r[k] = v end
+    return r
+end
+
+local function esc(v)
+    if type(v) == "string" then
+        return "'" .. v .. "'"
+    else
+        return tostring(v)
+    end
+end
+---Recursively print a value to standard output
+---@param v any
+function M.debug(v, indent)
+    indent = indent or 0
+    local m = string.rep(" ", indent)
+    if type(v) ~= "table" then
+        print(m .. esc(v))
+        return
+    end
+    print(m .. "{")
+    for k, v in pairs(v) do
+        if type(v) ~= "table" then
+            print("  " .. m .. esc(k) .. " = " .. esc(v) .. ",")
+        else
+            print("  " .. m .. esc(k) .. " = ")
+            M.debug(v, indent + 6)
+        end
+    end
+    print(m .. "}")
+end
+
 return M

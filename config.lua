@@ -16,7 +16,7 @@ M.CONFIG = {
     color = "#ffffff",
     icon_color = "#EB6536",
     -- misc
-    scale_factor = 2, -- if running under Xwayland + Gnome Wayland
+    scale_factor = 1, -- if running under Xwayland + Gnome Wayland
     column_sep = 20,
     hr_width = 1,
     bar_height = 8,
@@ -27,21 +27,21 @@ M.CONFIG = {
 function M.TEMPLATE()
     return {
         sys.uname(),
-        hr(2),
+        hr(),
         sys.uptime(),
         sys.cpufreq(8),
         sys.ram_usage(),
         sys.swap_usage(),
         sys.cpu_usage(),
         sys.ps(),
-        hr(2),
+        hr(),
         zfs.usage("\u{f02dc}", "~", "/home/kim"),
         zfs.usage("\u{f023}", "Vault", "/home/kim/Private"),
         zfs.usage("\u{f0a0}", "/", "/"),
         zfs.usage("\u{f200}", "Total", "rpool"),
         zfs.usage("\u{f140b}", "Boot", "/boot"),
-        net.interfaces({ "eth0", "wlp2s0" }, hr(2)),
-        hr(2),
+        net.interfaces({ "eth0", "wlp2s0" }, hr()),
+        hr(),
         sys.hwmon("1/2:1", "Package ID 0:", "temp", "coretemp", 1),
         row(sys.hwmon("1/2:1", "Core 0:", "temp", "coretemp", 2),
             sys.hwmon("1/2:2", "Core 1:", "temp", "coretemp", 3)),
@@ -49,7 +49,7 @@ function M.TEMPLATE()
             sys.hwmon("1/2:2", "Core 3:", "temp", "coretemp", 5)),
         row(sys.hwmon("1/2:1", "Fan 1:", "fan", "dell_smm", 1),
             sys.hwmon("1/2:2", "Fan 2:", "fan", "dell_smm", 2)),
-        hr(2),
+        hr(),
         gcalcli.get(300, {
             ["kim@nguyen.vg"] = "#baffc9",
             ["LMF (public)"] = "#bae1ff",
