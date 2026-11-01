@@ -315,10 +315,13 @@ end
 
 ---Redraws the window background
 function M.draw_bg()
+    if RES == nil or RES.window_color == nil then
+        return
+    end
     local surface = conky_surface()
     if not surface then return end
     local cr = cairo_create(surface)
-    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE)
+    cairo_set_operator(cr, CAIRO_OPERATOR_DEST_OVER)
     cairo_set_source_rgba(cr, table.unpack(parse_color(RES.window_color)))
     cairo_paint(cr)
     cairo_destroy(cr)

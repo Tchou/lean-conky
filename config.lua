@@ -17,7 +17,7 @@ M.CONFIG = {
     icon_color = "#EB6536",
     window_color = '#cd170026',
     -- misc
-    scale_factor = 1, -- if running under Xwayland + Gnome Wayland
+    scale_factor = 2, -- if running under Xwayland + Gnome Wayland
     column_sep = 20,
     hr_width = 1,
     bar_height = 8,

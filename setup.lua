@@ -15,6 +15,6 @@ function conky_content()
     return layout.render(t)
 end
 
-function conky_bg ()
-    layout.draw_bg ()
+function conky_bg()
+    layout.draw_bg()
 end
